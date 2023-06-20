@@ -69,6 +69,8 @@ Espressif Systems 社の 32bit マイコンモジュール「ESP32-WROOM-32E」�
 Raspberry Pi 財団の 32bit マイコンチップ「RP2040」を搭載したモデル  
 詳細は [about-RP2040-Base.md](./about-RP2040-Base.md) を
 
+※RP2040_Base は開発停止しました
+
 ### ②観測基板等
 
 ※ベース基板の上に積み重ねるようにして接続して使用
