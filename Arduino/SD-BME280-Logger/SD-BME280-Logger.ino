@@ -26,8 +26,9 @@
 /* 使用する GPIO を指定 */
 #define LED 4
 
-/* 1 ループごとの秒数を指定 */
+/* 1 ループごとの秒数を指定(ミリ秒) */
 #define interval 1
+#define ms       500
 
 /* インスタンス作成 */
 Adafruit_BME280 bme;
@@ -39,7 +40,7 @@ float pres;
 float hmid;
 
 /* ログを保存するファイル名を指定 */
-const char* filename = "/ESP32_Base_Sample_Log.csv";
+char filename[32] = "/ESP32_Base_Sample_Log.csv";
 
 void setup() {
   /* デバッグ用のシリアル通信を開始 */
@@ -66,8 +67,18 @@ void setup() {
     delay(500);
   }
 
+  uint8_t count = 0;
+  while(SD.exists(filename)) {
+    count++;
+    sprintf(filename, "/ESP32_Base_Sample_Log%d.csv", count);
+  }
+
+  Serial.print("\nfilename is ");
+  Serial.print(filename);
+  Serial.print("\n");
+
   SD_Append("temp, pres, hmid\n");
-  Serial.print("temp, pres, hmid\n");
+  Serial.print("\n-------------------\ntemp, pres, hmid\n");
 }
 
 void loop() {
@@ -77,7 +88,7 @@ void loop() {
   pres = bme.readPressure() / 100.0F;
   hmid = bme.readHumidity();
 
-  char buffer[34];
+  char buffer[42];
   sprintf(buffer, "%f, %f, %f\n", temp, pres, hmid);
   SD_Append(buffer);
   Serial.print(buffer);
@@ -85,7 +96,7 @@ void loop() {
   digitalWrite(LED,  LOW);
 
   for(uint8_t i = 0; i < interval; i++) {
-    delay(1000);
+    delay(ms);
   }
 }
 
@@ -105,7 +116,7 @@ void SD_Read(void) {
   file = SD.open(filename);
 
   if(!file) {
-    Serial.print("Failed to open file for writing.\n");
+    Serial.print("Failed to open file for reading.\n");
     return;
   }
 
