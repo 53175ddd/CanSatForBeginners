@@ -28,7 +28,7 @@
 
 /* 1 ループごとの秒数を指定(ミリ秒) */
 #define interval 1
-#define ms       500
+#define ms       1000
 
 /* インスタンス作成 */
 Adafruit_BME280 bme;
@@ -38,9 +38,10 @@ File file;
 float temp;
 float pres;
 float hmid;
+uint32_t counter = 0;
 
 /* ログを保存するファイル名を指定 */
-char filename[32] = "/ESP32_Base_Sample_Log.csv";
+char filename[32] = "/ESP32_Base_Sample_Log0.csv";
 
 void setup() {
   /* デバッグ用のシリアル通信を開始 */
@@ -77,8 +78,8 @@ void setup() {
   Serial.print(filename);
   Serial.print("\n");
 
-  SD_Append("temp, pres, hmid\n");
-  Serial.print("\n-------------------\ntemp, pres, hmid\n");
+  SD_Append("count, temp, pres, hmid\n");
+  Serial.print("\n-----------------------\ntemp, pres, hmid\n");
 }
 
 void loop() {
@@ -92,6 +93,8 @@ void loop() {
   sprintf(buffer, "%f, %f, %f\n", temp, pres, hmid);
   SD_Append(buffer);
   Serial.print(buffer);
+
+  counter++;
 
   digitalWrite(LED,  LOW);
 
